@@ -1,4 +1,7 @@
+#define _USE_MATH_DEFINES
+
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -16,8 +19,6 @@ public:
   MyComplex& operator-(const MyComplex& d);
   MyComplex& operator*(const MyComplex& d);
   MyComplex& operator/(const MyComplex& d);
-
-
   //Геттеры
   double get_re()
   {
@@ -36,8 +37,19 @@ public:
   {
     this->im = a;
   }
+  //Модуль и аргумент
+  double abs(MyComplex a)
+  {
+    return(sqrt(a.get_re() * a.get_re() + a.get_im() * a.get_im()));
+  }
+  double arg(MyComplex a)
+  {
+    return(atan(a.get_im() / a.get_re()) * 180 / M_PI);
+  }
+  //Возведение в степень
+  MyComplex pow(MyComplex a, int n);
   //Сравнение
-  friend bool operator==(const MyComplex a,const MyComplex b);
+  //friend bool operator==(const MyComplex a,const MyComplex b);
 };
 
 MyComplex& MyComplex::operator+(const MyComplex& d)
@@ -72,7 +84,13 @@ MyComplex& MyComplex::operator/(const MyComplex& d)
   return c;
 }
 
-
+MyComplex pow(MyComplex a, int n)
+{
+  MyComplex c;
+  c.set_re(pow(a.abs(a), n) * cos(n * atan(a.get_im() / a.get_re())));
+  c.set_re(pow(a.abs(a), n) * sin(n * atan(a.get_im() / a.get_re())));
+  return c;
+}
 
 ostream& operator<<(ostream& o, MyComplex b)
 {
@@ -87,15 +105,18 @@ istream& operator>>(istream& o, MyComplex& b)
   return o;
 }
 
+/*
 bool operator==(const MyComplex a,const MyComplex b)
 {
   return (a.re==b.re && a.im==b.im)
 }
+*/
 
 void main()
 {
   MyComplex c,f;
   cin >> c;
   cin >> f;
-  cout << c==f;
+  cout << pow(c, 4) << endl;
+  cout << f * f;
 }
